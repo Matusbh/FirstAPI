@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
   },
 );
 
+//Presave hace que si la contraseña es 1234 no se guarde 1234 por seguridad
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 

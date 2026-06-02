@@ -2,6 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import express from "express";
 import morgan from "morgan";
+import usersRoutes from "./routes/usersRoutes.js";
 
 const app = express();
 const DB_URL =
@@ -25,5 +26,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.status(200).send("Hello world");
 });
+
+app.use("/api/users", usersRoutes);
 
 export default app;
