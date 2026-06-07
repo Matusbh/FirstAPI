@@ -28,7 +28,7 @@ router.post("/signup", async (req, res) => {
       },
       process.env.JWT_SECRET,
       {
-        expiresIN: "1h",
+        expiresIn: "1h",
       },
     );
 
@@ -41,6 +41,7 @@ router.post("/signup", async (req, res) => {
       token,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).send("Something went wrong");
   }
 });
@@ -50,7 +51,7 @@ router.post("/login", async (req, res) => {
   user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(400).send("Email or password invalid");
 
-  const validPassword = await bctypt.compare(req.body.password, user.password);
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) return res.status(400).send("Email or password invalid");
 
   const token = jwt.sign(

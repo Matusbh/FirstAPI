@@ -29,11 +29,11 @@ const userSchema = new mongoose.Schema(
 );
 
 //Presave hace que si la contraseña es 1234 no se guarde 1234 por seguridad
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
 
   const salt = await bcrypt.genSalt(10);
-  this.password = await brypt.hash(this.password, salt);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 userSchema.index({ id: 1, email: 1 });

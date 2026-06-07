@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export default function auth(req, res, next) {
   const token = req.header("Autorization");
-  if (!token) return res.status(401).send("Acces denied.No token porovided");
+  if (!token) return res.status(401).send("Acces denied. No token provided");
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
