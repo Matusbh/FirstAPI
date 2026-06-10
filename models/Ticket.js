@@ -14,7 +14,7 @@ const ticketSchema = new mongoose.Schema(
     priority: {
       type: String,
       enum: ["low", "medium", "high"],
-      default: low,
+      default: "low",
     },
     title: { type: String, required: true },
     description: { type: String, required: true },
