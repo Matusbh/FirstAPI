@@ -52,6 +52,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("Email or password invalid");
 
+    //Comparamos la contraseña que nos llega en el body de la petición con la contraseña que tenemos en la base de datos, que está hasheada
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password,

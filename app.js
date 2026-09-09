@@ -18,6 +18,7 @@ mongoose
 
 const port = process.env.PORT || 3000;
 
+//midelware para loguear las peticiones que llegan al servidor
 app.use(morgan("dev"));
 
 //midelware para parsear el body de las peticiones a json se debe usar antes de las rutas
