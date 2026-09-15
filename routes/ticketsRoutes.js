@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
 import express from "express";
 import Ticket from "../models/Ticket.js";
+import auth from "../midelwares/auth.js";
+import admin from "../midelwares/admin.js";
 
 const router = express.Router();
 
@@ -15,9 +16,10 @@ router.get("/", async (req, res) => {
 });
 
 // POST api create ticket
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
+  //Creamos un nuevo ticket con los datos que nos llegan del body
   const ticket = new Ticket({
-    user: req.body.user,
+    user: req.user._id,
     title: req.body.title,
     description: req.body.description,
     priority: req.body.priority,
@@ -25,7 +27,9 @@ router.post("/", async (req, res) => {
   });
 
   try {
+    //Guardamos el ticket en la base de datos
     const newTicket = await ticket.save();
+    //Respondemos con el ticket que se ha creado
     res.status(201).send(newTicket);
   } catch (err) {
     res.status(500).send({ message: "Server Error: " + err.message });
@@ -35,7 +39,7 @@ router.post("/", async (req, res) => {
 //Get por id
 router.get("/:id", async (req, res) => {
   try {
-    // const ticket = await Ticket.findById(req.params.id); esto  es si usamos el ide de mopngoose
+    // const ticket = await Ticket.findById(req.params.id); esto  es si usamos el ide de mopngoose para buscar por id, pero nosotros generamos un id con uuidv4 y queremos buscar por ese id que generamos nosotros
 
     const ticket = await Ticket.findOne({ id: req.params.id }); //esto es si usamos el id que generamos con uuidv4
     //Si no existe el ticket que solicitamos
@@ -49,10 +53,11 @@ router.get("/:id", async (req, res) => {
 });
 
 //Put para actualizar
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const update = req.body;
 
   try {
+    // Actualizamos el ticket con los datos del body
     const ticket = await Ticket.findByIdAndUpdate(req.params.id, update, {
       new: true,
     });
@@ -66,9 +71,9 @@ router.put("/:id", async (req, res) => {
 });
 
 //Delete
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   try {
-    const ticket = await Ticket.findByIdAndDelete(req.params.id);
+    const ticket = await Ticket.findOneAndDelete({ id: req.params.id });
 
     if (!ticket) return res.status(400).send({ message: "Ticket not found" });
 
