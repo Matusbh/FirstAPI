@@ -1,0 +1,3 @@
+GET http://localhost:4000/api/tickets/?pagesize=5&page=2 HTTP/1.1
+
+//Numero de objetos es 5 y la pagina es la 2, por lo que nos traera los tickets del 6 al 10

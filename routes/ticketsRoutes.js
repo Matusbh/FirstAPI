@@ -7,9 +7,25 @@ const router = express.Router();
 
 //GET que nos trae todo porque esta sin parametros especificados de que traer
 router.get("/", async (req, res) => {
+  //Creamos la cantidad de objetos que va a haber enun apagina
+  const pageSize = parseInt(req.query.pagesize) || 10;
+  // Creamos la pagina inicial por defectro es decir la 0
+  const page = parseInt(req.query.page) || 1;
+
   try {
-    const ticket = await Ticket.find({});
-    res.status(200).send(ticket);
+    //Concatenamos varias funciones ya nonecesitamos find todos si no qque empezamos en la pagina que hicimos y lo limitamos con el limite de objetos que creamos
+    const tickets = await Ticket.find()
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    const total = await Ticket.countDocuments();
+    // Ahora a la hora de enviar y ano solo enviamos los trickets si no que enviamos las paginas.
+    res.status(200).send({
+      tickets,
+      page,
+      pages: Math.ceil(total / pageSize),
+      currentPage: page,
+    });
   } catch (err) {
     res.status(500).send({ message: "Server Error" + err.message });
   }
