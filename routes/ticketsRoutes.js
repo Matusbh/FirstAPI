@@ -11,10 +11,21 @@ router.get("/", async (req, res) => {
   const pageSize = parseInt(req.query.pagesize) || 10;
   // Creamos la pagina inicial por defectro es decir la 0
   const page = parseInt(req.query.page) || 1;
+  const status = req.query.status || "";
+  const priority = req.query.priority || "";
 
+  let filter = {};
+
+  if (status) {
+    filter.status = status;
+  }
+
+  if (priority) {
+    filter.priority = priority;
+  }
   try {
     //Concatenamos varias funciones ya nonecesitamos find todos si no qque empezamos en la pagina que hicimos y lo limitamos con el limite de objetos que creamos
-    const tickets = await Ticket.find()
+    const tickets = await Ticket.find(filter)
       .skip((page - 1) * pageSize)
       .limit(pageSize);
 
