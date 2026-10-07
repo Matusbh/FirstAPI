@@ -2,47 +2,25 @@ import express from "express";
 import Ticket from "../models/Ticket.js";
 import auth from "../midelwares/auth.js";
 import admin from "../midelwares/admin.js";
+import buildFilter from "../midelwares/filter.js";
+import pagination from "../midelwares/pagination.js";
 
 const router = express.Router();
 
-//GET que nos trae todo porque esta sin parametros especificados de que traer
-router.get("/", async (req, res) => {
-  //Creamos la cantidad de objetos que va a haber enun apagina
-  const pageSize = parseInt(req.query.pagesize) || 10;
-  // Creamos la pagina inicial por defectro es decir la 0
-  const page = parseInt(req.query.page) || 1;
-  const status = req.query.status || "";
-  const priority = req.query.priority || "";
-
-  let filter = {};
-
-  if (status) {
-    filter.status = status;
-  }
-
-  if (priority) {
-    filter.priority = priority;
-  }
-  try {
-    //Concatenamos varias funciones ya nonecesitamos find todos si no qque empezamos en la pagina que hicimos y lo limitamos con el limite de objetos que creamos
-    const tickets = await Ticket.find(filter)
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
-
-    const total = await Ticket.countDocuments();
-    // Ahora a la hora de enviar y ano solo enviamos los trickets si no que enviamos las paginas.
-    res.status(200).send({
-      tickets,
-      page,
-      pages: Math.ceil(total / pageSize),
-      currentPage: page,
-    });
-  } catch (err) {
-    res.status(500).send({ message: "Server Error" + err.message });
-  }
+//GET all tickets
+//GET /api/tickets
+//GET /api/tickets?pageSize=10&page=1
+//GET /api/tickets?status=open&priority=high
+//GET /api/tickets?search=bug
+//public
+router.get("/", buildFilter, pagination(Ticket), async (req, res) => {
+  res.status(200).json(req.paginatedResults);
 });
 
+//Crea tickets
 // POST api create ticket
+//Private Only loged users can create tickets
+//Ticket Schema: user, titile, desctription, priority, status
 router.post("/", auth, async (req, res) => {
   //Creamos un nuevo ticket con los datos que nos llegan del body
   const ticket = new Ticket({
@@ -63,7 +41,9 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+//Get ticket by id
 //Get por id
+//Public
 router.get("/:id", async (req, res) => {
   try {
     // const ticket = await Ticket.findById(req.params.id); esto  es si usamos el ide de mopngoose para buscar por id, pero nosotros generamos un id con uuidv4 y queremos buscar por ese id que generamos nosotros
@@ -80,6 +60,8 @@ router.get("/:id", async (req, res) => {
 });
 
 //Put para actualizar
+//Private(only logged in users can update tickets)
+//Tickets Schema: users, titile, description, priority,status
 router.put("/:id", auth, async (req, res) => {
   const update = req.body;
 
@@ -97,7 +79,8 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-//Delete
+//Delete ticket by id
+//Private (only admin users can delete tickets)
 router.delete("/:id", [auth, admin], async (req, res) => {
   try {
     const ticket = await Ticket.findOneAndDelete({ id: req.params.id });

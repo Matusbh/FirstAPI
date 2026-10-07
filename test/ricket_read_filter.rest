@@ -1,3 +1,9 @@
 # GET http://localhost:4000/api/tickets?status=closed HTTP/1.1
 
-GET http://localhost:4000/api/tickets?priority=hight HTTP/1.1
+# GET http://localhost:4000/api/tickets?priority=hight HTTP/1.1
+
+# GET http://localhost:4000/api/tickets?priority=hight&status=closed HTTP/1.1
+
+#GET http://localhost:4000/api/tickets?priority=low&pageSize=5 HTTP/1.1
+
+GET http://localhost:4000/api/tickets?search=bug HTTP/1.1
