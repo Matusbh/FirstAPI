@@ -1,9 +1,9 @@
 POST http://localhost:4000/api/tickets HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI1ZGIwOTk0MDVlOGU5YWZjYzI5M2YiLCJyb2xlIjoidXNlciIsImlhdCI6MTc4OTU0MDg3MiwiZXhwIjoxNzg5NTQ0NDcyfQ.zyD_HDGW8wDYRIBgM-GiWCBd7KnfeqmVDr-smu8kHO4
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI1ZGIwOTk0MDVlOGU5YWZjYzI5M2YiLCJyb2xlIjoidXNlciIsImlhdCI6MTc4OTU0MDg3MiwiZXhwIjoxNzg5NTQ0NDcyfQ.zyD_HDGW8wDYRIBgM-GiWCBd7KnfeqmVDr-smu8kHO4
 
 
 {
-    "title": "Ticket #15",
+    "title": "Ticket #16",
     "description": "Este es un ticket"
 }

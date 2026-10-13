@@ -4,6 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import usersRoutes from "./routes/usersRoutes.js";
 import ticketsRoutes from "./routes/ticketsRoutes.js";
+import error from "./midelwares/error.js";
 
 const app = express();
 const DB_URL =
@@ -25,11 +26,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 //Prticion get sincreona cuando se dispara el evento de la ruta '/'
-app.get("/", (req, res) => {
-  res.status(200).send("Hello world");
+app.get("/ping", (req, res) => {
+  res.status(200).send("Pong");
 });
 
 app.use("/api/users", usersRoutes);
 app.use("/api/tickets", ticketsRoutes);
+app.use(error);
 
 export default app;
